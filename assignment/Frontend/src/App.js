@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import MapComponent from './MapComponent';
-import Cuboid from './Cuboid';
+import MapComponent from './Components/MapComponent';
+import Cuboid from './Components/Cuboid';
 import './App.css';
 const App = () => {
  const [imageUrl, setImageUrl] = useState(null);
