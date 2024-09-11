@@ -1,18 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import MapComponent from './Components/MapComponent';
-import Cuboid from './Components/Cuboid';
+import axios from 'axios';
+import BabylonScene from './Components/Cuboid';
+import html2canvas from 'html2canvas';
 import './App.css';
-const App = () => {
- const [imageUrl, setImageUrl] = useState(null);
- const handleMapCapture = (url) => {
-   setImageUrl(url);
- };
- return (
-<div>
-<h1>Map Capture to 3D Cuboid</h1>
-<MapComponent onCapture={handleMapCapture} />
-     {imageUrl && <Cuboid imageUrl={imageUrl} />}
-</div>
- );
-};
+
+function App() {
+  const [region, setRegion] = useState(null);
+  const [image, setImage] = useState(null);
+  const mapContainerRef = useRef();
+
+  const handleCapture = async () => {
+    if (!region || !mapContainerRef.current) {
+      alert('Region not selected or map container not found!');
+      return;
+    }
+
+    try {
+      // Capture the visible region of the map as an image
+      const canvas = await html2canvas(mapContainerRef.current);
+      const imageUrl = canvas.toDataURL('image/png');
+
+      // Send the captured image to the backend
+      const response = await axios.post('http://localhost:5001/api/maps/capture', {
+        imageUrl,
+        region,
+        userId: '12345',
+      });
+
+      setImage(response.data.imageUrl);
+      console.log('Capture saved:', response.data);
+    } catch (error) {
+      console.error('Error capturing region:', error);
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>Map Capture</h1>
+      <div ref={mapContainerRef} style={{ height: '500px', width: '100%' }}>
+        <MapComponent setRegion={setRegion} />
+      </div>
+      <button onClick={handleCapture}>Capture Region</button>
+      {image && (
+        <>
+          <img src={image} alt="Captured Region" />
+          <BabylonScene textureUrl={image} />
+        </>
+      )}
+    </div>
+  );
+}
+
 export default App;

@@ -1,16 +1,12 @@
 const mongoose = require('mongoose');
-// Schema for map capture
+
 const mapCaptureSchema = new mongoose.Schema({
-   imageUrl: { type: String, required: true },
-   region: {
-       north: Number,
-       south: Number,
-       east: Number,
-       west: Number,
-   },
-   userId: { type: String, required: true },
-   timestamp: { type: Date, default: Date.now },
+  region: {
+    northEast: { lat: Number, lng: Number },
+    southWest: { lat: Number, lng: Number },
+  },
+  imageUrl: String,
+  createdAt: { type: Date, default: Date.now },
 });
-// Create the model from the schema
-const MapCapture = mongoose.model('MapCapture', mapCaptureSchema);
-module.exports = MapCapture;
+
+module.exports = mongoose.model('MapCapture', mapCaptureSchema);
