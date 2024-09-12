@@ -15,7 +15,6 @@ const MapComponent = ({ setRegion }) => {
           east: bounds.getEast(),
           west: bounds.getWest(),
         };
-        console.log("Map moved! Region selected:", regionData);
         setRegion(regionData);
       },
     });
@@ -23,7 +22,9 @@ const MapComponent = ({ setRegion }) => {
   };
 
   useEffect(() => {
-    console.log("Map initialized");
+    if (mapRef.current) {
+      console.log("Map initialized");
+    }
   }, []);
 
   return (
@@ -32,6 +33,7 @@ const MapComponent = ({ setRegion }) => {
       zoom={13}
       scrollWheelZoom={true}
       style={{ height: '100%', width: '100%' }}
+      ref={mapRef}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

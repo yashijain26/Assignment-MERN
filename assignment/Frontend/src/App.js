@@ -17,7 +17,6 @@ function App() {
     }
 
     try {
-      // Capture the visible region of the map as an image
       const canvas = await html2canvas(mapContainerRef.current);
       const imageUrl = canvas.toDataURL('image/png');
 
@@ -28,7 +27,7 @@ function App() {
         userId: '12345',
       });
 
-      setImage(response.data.imageUrl);
+      setImage(imageUrl);
       console.log('Capture saved:', response.data);
     } catch (error) {
       console.error('Error capturing region:', error);
@@ -44,7 +43,8 @@ function App() {
       <button onClick={handleCapture}>Capture Region</button>
       {image && (
         <>
-          <img src={image} alt="Captured Region" />
+          <h2>Captured Image</h2>
+          <img src={image} alt="Captured Region" style={{ maxWidth: '100%', height: 'auto' }} />
           <BabylonScene textureUrl={image} />
         </>
       )}
